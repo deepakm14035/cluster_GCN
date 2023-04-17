@@ -25,6 +25,7 @@ import utils
 import scipy.sparse as sp
 
 tf.logging.set_verbosity(tf.logging.INFO)
+tf.compat.v1.disable_eager_execution()
 # Set random seed
 seed = 1
 np.random.seed(seed)
@@ -55,7 +56,7 @@ flags.DEFINE_float(
 flags.DEFINE_bool('multilabel', True, 'Multilabel or multiclass.')
 flags.DEFINE_bool('layernorm', True, 'Whether to use layer normalization.')
 flags.DEFINE_bool(
-    'precalc', True,
+    'precalc', False,
     'Whether to pre-calculate the first layer (AX preprocessing).')
 flags.DEFINE_bool('validation', True,
                   'Print validation accuracy after each epoch.')

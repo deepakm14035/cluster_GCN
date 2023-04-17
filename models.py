@@ -61,7 +61,7 @@ class Model(object):
     self.sparse_inputs = kwargs.get('sparse_inputs', False)
     self.valid_dimension = kwargs.get('valid_dimension', 0) # max nonzero num of features
     self.attn_reg = kwargs.get('attn_reg', 0)
-
+    print('\n\n[deepak] precalc - ',self.precalc)
     # GAT
     self.gat_layers = kwargs.get('gat_layers', [16])
 
