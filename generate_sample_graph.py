@@ -5,16 +5,37 @@ import json
 from tensorflow.compat.v1 import gfile
 import tensorflow.compat.v1 as tf
 import numpy as np
+import os
 import random
 
-def generate_sample_graph(G, path, name):
-    print(G.nodes)
+def generate_sample_graph(G, path, name, class_map, feats):
+    #print(feats)
+    #print(G.nodes)
     sampled_nodes = random.sample(G.nodes, 20)
     sampled_graph = G.subgraph(sampled_nodes)
-    print(sampled_graph.nodes)
+    #print(sampled_graph.nodes)
     name = name+'_new'
-    print(json_graph.node_link_data(sampled_graph))
-    
+    #print(json_graph.node_link_data(sampled_graph))
+    if not os.path.exists(name):
+        os.makedirs(name)
+    json.dump(json_graph.node_link_data(sampled_graph), open(name+"/" + name+'-G.json', 'w'))
+
+    nodes_dict={}
+    for node in sampled_graph:
+        nodes_dict[node] = node
+    f = open(name+"/" + name+'-id_map.json', 'w')
+    json.dump(nodes_dict, f)
+
+    new_class_map={}
+    for node in sampled_graph:
+        new_class_map[str(node)] = class_map[str(node)]
+    f = open(name+"/" + name+'-class_map.json', 'w')
+    json.dump(new_class_map, f)
+
+    new_feats={}
+
+    np.save(name+"/" + name+'-feat.npy', feats)
+
 
 
 dataset_path = 'data'
@@ -34,9 +55,6 @@ class_map = json.load(
     gfile.Open('{}/{}/{}-class_map.json'.format(dataset_path, dataset_str,
                                                 dataset_str)))
 
-is_instance = isinstance(list(class_map.values())[0], list)
-class_map = {(int(k) if is_digit else k): (v if is_instance else int(v))
-            for k, v in class_map.items()}
 
 broken_count = 0
 to_remove = [ ]
@@ -60,4 +78,4 @@ for edge in graph_nx.edges():
         edges.append((id_map[edge[0]], id_map[edge[1]]))
 num_data = len(id_map)
 
-generate_sample_graph(graph_nx, dataset_path, dataset_str)
+generate_sample_graph(graph_nx, dataset_path, dataset_str, class_map, feats)
