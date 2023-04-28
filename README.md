@@ -91,3 +91,4 @@ If you use any of the materials, please cite the following paper.
   url = {https://arxiv.org/pdf/1905.07953.pdf},
 }
 
+py -3.5 -m pip install library_name

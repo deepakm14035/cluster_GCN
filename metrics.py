@@ -39,6 +39,8 @@ def masked_sigmoid_cross_entropy(preds, labels, mask):
 
 def masked_accuracy(preds, labels, mask):
   """Accuracy with masking."""
+  print(preds)
+  print(labels)
   correct_prediction = tf.equal(tf.argmax(preds, 1), tf.argmax(labels, 1))
   accuracy_all = tf.cast(correct_prediction, tf.float32)
   mask = tf.cast(mask, dtype=tf.float32)
@@ -49,6 +51,8 @@ def masked_accuracy(preds, labels, mask):
 
 def masked_accuracy_multilabel(preds, labels, mask):
   """Multilabel accuracy with masking."""
+  print(preds)
+  print(labels)
   preds = preds > 0
   labels = labels > 0.5
   correct_prediction = tf.equal(preds, labels)

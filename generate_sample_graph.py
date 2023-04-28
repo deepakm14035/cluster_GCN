@@ -8,33 +8,66 @@ import numpy as np
 import os
 import random
 
+def get_largest_component(G):
+    sorted_components_list = [c for c in sorted(nx.connected_components(G), key=len, reverse=True)]
+    sampled_graph = G.subgraph(sorted_components_list[2])
+    return sampled_graph
+
+
 def generate_sample_graph(G, path, name, class_map, feats):
     #print(feats)
     #print(G.nodes)
-    sampled_nodes = random.sample(G.nodes, 20)
-    sampled_graph = G.subgraph(sampled_nodes)
-    #print(sampled_graph.nodes)
-    name = name+'_new'
-    #print(json_graph.node_link_data(sampled_graph))
-    if not os.path.exists(name):
-        os.makedirs(name)
-    json.dump(json_graph.node_link_data(sampled_graph), open(name+"/" + name+'-G.json', 'w'))
 
+    sampled_nodes = random.sample(G.nodes, 100)
+    sampled_graph = G.subgraph(sampled_nodes)
+    
+    test_nodes = np.array(
+      [id_map[n] for n in sampled_graph.nodes() if graph_nx.nodes[n]['test'] == True],
+      dtype=np.int32)
+    print("test_nodes", test_nodes)
+    name = name+'_new'
     nodes_dict={}
+    new_feats = np.zeros((len(sampled_nodes), feats.shape[1]))
+    #print("new_feats", new_feats)
+    i=0
     for node in sampled_graph:
-        nodes_dict[node] = node
-    f = open(name+"/" + name+'-id_map.json', 'w')
-    json.dump(nodes_dict, f)
+        if(node in test_nodes):
+            continue
+        nodes_dict[node] = i
+        new_feats[i] = feats[node]
+        i=i+1
+
+    for node in test_nodes:
+        nodes_dict[node] = i
+        new_feats[i] = feats[node]
+        i=i+1
+    #print("nodes_dict", nodes_dict)
+
+    new_nodes_dict={}
+    for node in sampled_graph:
+        new_nodes_dict[str(nodes_dict[node])]=nodes_dict[node]
+    sampled_graph = nx.relabel_nodes(sampled_graph, nodes_dict)
+
+    if not os.path.exists(path+"/"+name):
+        os.makedirs(path+"/"+name)
+    f = open(path+"/"+name+"/" + name+'-id_map.json', 'w')
+    json.dump(new_nodes_dict, f)
+
+
+    #sampled_graph = get_largest_component(G)
+    #print(sampled_graph.nodes)
+    #print(json_graph.node_link_data(sampled_graph))
+    json.dump(json_graph.node_link_data(sampled_graph), open(path+"/"+name+"/" + name+'-G.json', 'w'))
+
 
     new_class_map={}
     for node in sampled_graph:
         new_class_map[str(node)] = class_map[str(node)]
-    f = open(name+"/" + name+'-class_map.json', 'w')
+    f = open(path+"/"+name+"/" + name+'-class_map.json', 'w')
     json.dump(new_class_map, f)
 
-    new_feats={}
-
-    np.save(name+"/" + name+'-feat.npy', feats)
+    print("feats", new_feats.shape)
+    np.save(path+"/"+name+"/" + name+'-feats.npy', new_feats)
 
 
 

@@ -196,6 +196,7 @@ def preprocess(adj,
   # Do graph partitioning
   part_adj, parts = partition_utils.partition_graph(adj, visible_data,
                                                     num_clusters)
+  print(parts)
   if diag_lambda == -1:
     part_adj = normalize_adj(part_adj)
   elif diag_lambda == -2:
@@ -205,7 +206,8 @@ def preprocess(adj,
   else:
     part_adj = normalize_adj_diag_enhance(part_adj, diag_lambda)
   parts = [np.array(pt) for pt in parts]
-
+  print("parts", parts)
+  print("features", features)
   features_batches = []
   support_batches = []
   y_train_batches = []
@@ -608,7 +610,8 @@ def load_graphsage_data(dataset_path, dataset_str, normalize=True):
 
   train_feats = feats[train_data]
   test_feats = feats
-
+  print("train_feats.shape", train_feats.shape)
+  print("feats.shape", feats.shape)
   tf.logging.info('Data loaded, %f seconds.', time.time() - start_time)
   return num_data, train_adj, full_adj, feats, train_feats, test_feats, labels, train_data, val_data, test_data
 
