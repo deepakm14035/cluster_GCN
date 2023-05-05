@@ -18,25 +18,37 @@ def generate_sample_graph(G, path, name, class_map, feats):
     #print(feats)
     #print(G.nodes)
 
-    sampled_nodes = random.sample(G.nodes, 100)
+    sampled_nodes = random.sample(G.nodes, 5000)
     sampled_graph = G.subgraph(sampled_nodes)
     
     test_nodes = np.array(
       [id_map[n] for n in sampled_graph.nodes() if graph_nx.nodes[n]['test'] == True],
       dtype=np.int32)
+
+    val_nodes = np.array(
+      [id_map[n] for n in sampled_graph.nodes() if graph_nx.nodes[n]['val'] == True],
+      dtype=np.int32)
+    print("val_nodes", val_nodes)
     print("test_nodes", test_nodes)
     name = name+'_new'
     nodes_dict={}
     new_feats = np.zeros((len(sampled_nodes), feats.shape[1]))
     #print("new_feats", new_feats)
     i=0
+    print("nodes", sampled_graph.nodes)
     for node in sampled_graph:
-        if(node in test_nodes):
+        if(node in test_nodes or node in val_nodes):
             continue
         nodes_dict[node] = i
+        print(node)
         new_feats[i] = feats[node]
         i=i+1
 
+    for node in val_nodes:
+        nodes_dict[node] = i
+        new_feats[i] = feats[node]
+        i=i+1
+    
     for node in test_nodes:
         nodes_dict[node] = i
         new_feats[i] = feats[node]
@@ -72,7 +84,7 @@ def generate_sample_graph(G, path, name, class_map, feats):
 
 
 dataset_path = 'data'
-dataset_str = 'ppi'
+dataset_str = 'reddit'
 
 graph_json = json.load(
     gfile.Open('{}/{}/{}-G.json'.format(dataset_path, dataset_str,

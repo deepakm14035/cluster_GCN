@@ -34,7 +34,7 @@ def num_of_self_loops(graph):
     return count
 
 def get_counts(G):
-    return [len(c) for c in sorted(nx.connected_components(G), key=len, reverse=True)]
+    return [len(c) for c in sorted(nx.connected_components(G), key=len, reverse=False)]
 
 def get_num_of_test_nodes(G):
     test_data = np.array(
@@ -51,10 +51,11 @@ def get_graph(file):
     print("number of connected components: ", nx.number_connected_components(graph_nx))
     print("size of connected components: ", get_counts(graph_nx))
     print("number of test nodes: ", get_num_of_test_nodes(graph_nx))
+    #print("nodes", graph_nx.nodes)
     
     return graph_nx
 
-graph = get_graph("ppi_new/ppi_new-G.json")
+graph = get_graph("data/ppi/ppi-G.json")
 #graph = get_graph("data/ppi/ppi-G.json")
 #nx.draw_networkx(graph, node_size=10, with_labels=True)
 #plt.show()

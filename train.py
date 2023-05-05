@@ -81,10 +81,12 @@ def load_data(data_prefix, dataset_str, precalc):
   test_mask = utils.sample_mask(test_data, labels.shape[0])
 
   if precalc:
+    print("train_feats before", train_feats)
     train_feats = train_adj.dot(feats)
     train_feats = np.hstack((train_feats, feats))
     test_feats = full_adj.dot(feats)
     test_feats = np.hstack((test_feats, feats))
+    print("train_feats after", train_feats)
 
   return (train_adj, full_adj, train_feats, test_feats, y_train, y_val, y_test,
           train_mask, val_mask, test_mask, train_data, val_data, test_data,

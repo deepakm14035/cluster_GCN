@@ -192,11 +192,14 @@ def preprocess(adj,
                diag_lambda=-1,
                sparse_input=False):
   """Do graph partitioning and preprocessing for SGD training."""
-
+  print("adj", adj)
+  print("visible_data", visible_data)
+  print("num_clusters", num_clusters)
   # Do graph partitioning
   part_adj, parts = partition_utils.partition_graph(adj, visible_data,
                                                     num_clusters)
-  print(parts)
+  print("parts", parts)
+  print("part_adj", part_adj)
   if diag_lambda == -1:
     part_adj = normalize_adj(part_adj)
   elif diag_lambda == -2:
@@ -206,6 +209,7 @@ def preprocess(adj,
   else:
     part_adj = normalize_adj_diag_enhance(part_adj, diag_lambda)
   parts = [np.array(pt) for pt in parts]
+  print("normalized part_adj", part_adj)
   print("parts", parts)
   print("features", features)
   features_batches = []
@@ -593,6 +597,7 @@ def load_graphsage_data(dataset_path, dataset_str, normalize=True):
         for n in graph_nx.nodes()
         if not graph_nx.nodes[n]['val'] and not graph_nx.nodes[n]['test']
     ])
+    print("train_ids", train_ids)
     train_feats = feats[train_ids]
     scaler = sklearn.preprocessing.StandardScaler()
     scaler.fit(train_feats)
