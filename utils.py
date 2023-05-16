@@ -192,14 +192,14 @@ def preprocess(adj,
                diag_lambda=-1,
                sparse_input=False):
   """Do graph partitioning and preprocessing for SGD training."""
-  print("adj", adj)
-  print("visible_data", visible_data)
-  print("num_clusters", num_clusters)
+  #print("adj", adj)
+  #print("visible_data", visible_data)
+  #print("num_clusters", num_clusters)
   # Do graph partitioning
   part_adj, parts = partition_utils.partition_graph(adj, visible_data,
                                                     num_clusters)
-  print("parts", parts)
-  print("part_adj", part_adj)
+  #print("parts", parts)
+  #print("part_adj", part_adj)
   if diag_lambda == -1:
     part_adj = normalize_adj(part_adj)
   elif diag_lambda == -2:
@@ -209,9 +209,9 @@ def preprocess(adj,
   else:
     part_adj = normalize_adj_diag_enhance(part_adj, diag_lambda)
   parts = [np.array(pt) for pt in parts]
-  print("normalized part_adj", part_adj)
-  print("parts", parts)
-  print("features", features)
+  #print("normalized part_adj", part_adj)
+  #print("parts", parts)
+  #print("features", features)
   features_batches = []
   support_batches = []
   y_train_batches = []
@@ -597,7 +597,7 @@ def load_graphsage_data(dataset_path, dataset_str, normalize=True):
         for n in graph_nx.nodes()
         if not graph_nx.nodes[n]['val'] and not graph_nx.nodes[n]['test']
     ])
-    print("train_ids", train_ids)
+    #print("train_ids", train_ids)
     train_feats = feats[train_ids]
     scaler = sklearn.preprocessing.StandardScaler()
     scaler.fit(train_feats)
@@ -615,8 +615,8 @@ def load_graphsage_data(dataset_path, dataset_str, normalize=True):
 
   train_feats = feats[train_data]
   test_feats = feats
-  print("train_feats.shape", train_feats.shape)
-  print("feats.shape", feats.shape)
+  #print("train_feats.shape", train_feats.shape)
+  #print("feats.shape", feats.shape)
   tf.logging.info('Data loaded, %f seconds.', time.time() - start_time)
   return num_data, train_adj, full_adj, feats, train_feats, test_feats, labels, train_data, val_data, test_data
 
@@ -639,7 +639,7 @@ def encode_onehot(labels):
 
 def load_ne_data_transductive(data_prefix, dataset_str, precalc, split=[0.7,0.2,0.1],normalize=True):
   """load data from graph and preprocessing: 10% train, 20% validation, 70% test"""   
-  print('Loading data from graph...'.format(dataset_str))
+  #print('Loading data from graph...'.format(dataset_str))
   names = ['adj', 'feature', 'label']
   objects = []
   for i in range(len(names)):
@@ -696,8 +696,8 @@ def load_ne_data_transductive(data_prefix, dataset_str, precalc, split=[0.7,0.2,
 
 def load_ne_data_transductive_sparse(data_prefix, dataset_str, precalc, split=[0.7,0.2,0.1],normalize=True):
   """load data from graph and preprocessing: 10% train, 20% validation, 70% test"""   
-  print('Loading data from graph...'.format(dataset_str))
-  print('split: ' + str(split))
+  #print('Loading data from graph...'.format(dataset_str))
+  #print('split: ' + str(split))
   names = ['adj', 'feature', 'label']
   objects = []
   for i in range(len(names)):
