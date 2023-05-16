@@ -32,6 +32,8 @@ idx_nodes:    visible data
 num_cluster:  partition clusters
 """
 
+#Deepak's code start
+
 def dfs_partition(G, num_partitions):
 
 	size_per_partition = len(G.nodes)/num_partitions
@@ -91,7 +93,7 @@ def partition_graph1(G, num_partitions):
     #greeding community detection algorithm
     c = nx.community.greedy_modularity_communities(G, cutoff = num_partitions)
     print("len(c)", len(c))
-		groups = [0] * len(G.nodes)
+    groups = [0] * len(G.nodes)
     i=0
 
     for partition in c:
@@ -112,6 +114,8 @@ def get_freq(groups):
       freq[component_size] = 1
   print("groups", freq)
   #print(np.array(train_adj_lists).shape)
+
+#Deepak's code end
 
 def partition_graph(adj, idx_nodes, num_clusters):
   """partition a graph by METIS."""
@@ -141,7 +145,7 @@ def partition_graph(adj, idx_nodes, num_clusters):
 
   if num_clusters > 1:
     #_, groups = metis.part_graph(train_adj_lists, num_clusters)
-    groups = partition_graph1(nx.from_scipy_sparse_array(train_adj_lil), num_clusters)
+    groups = dfs_partition(nx.from_scipy_sparse_array(train_adj_lil), num_clusters)
     #print("groups", set(groups))
     #print("groups1", set(groups1))
     #get_freq(groups1)

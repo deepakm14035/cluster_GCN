@@ -140,16 +140,7 @@ def main(unused_argv):
    visible_data) = load_data(FLAGS.data_prefix, FLAGS.dataset, FLAGS.precalc)
 
   # Partition graph and do preprocessing
-  if FLAGS.bsize > 1: # multi cluster per epoch
-    _, parts = partition_utils.partition_graph(train_adj, visible_data,
-                                               FLAGS.num_clusters)
-    parts = [np.array(pt) for pt in parts]
-  else:
-    (parts, features_batches, support_batches, y_train_batches,
-     train_mask_batches) = utils.preprocess(train_adj, train_feats, y_train,
-                                            train_mask, visible_data,
-                                            FLAGS.num_clusters,
-                                            FLAGS.diag_lambda)
+  
   # validation set
   (_, val_features_batches, val_support_batches, y_val_batches,
    val_mask_batches) = utils.preprocess(full_adj, test_feats, y_val, val_mask,
@@ -162,7 +153,8 @@ def main(unused_argv):
                                          test_mask, np.arange(num_data),
                                          FLAGS.num_clusters_test,
                                          FLAGS.diag_lambda)
-  idx_parts = list(range(len(parts))) # 0~50
+  
+  
 
   # Some preprocessing
   model_func = models.GCN
@@ -205,6 +197,19 @@ def main(unused_argv):
   # Train model
   for epoch in range(FLAGS.epochs):
     t = time.time()
+
+    if FLAGS.bsize > 1: # multi cluster per epoch
+      _, parts = partition_utils.partition_graph(train_adj, visible_data,
+                                                FLAGS.num_clusters)
+      parts = [np.array(pt) for pt in parts]
+    else:
+      (parts, features_batches, support_batches, y_train_batches,
+      train_mask_batches) = utils.preprocess(train_adj, train_feats, y_train,
+                                              train_mask, visible_data,
+                                              FLAGS.num_clusters,
+                                              FLAGS.diag_lambda)
+    idx_parts = list(range(len(parts))) # 0~50
+
     np.random.shuffle(idx_parts)
     if FLAGS.bsize > 1:
       (features_batches, support_batches, y_train_batches,

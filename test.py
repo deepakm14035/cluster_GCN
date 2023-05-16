@@ -1,3 +1,4 @@
+#Deepak's code start
 
 import networkx as nx
 import numpy as np
@@ -12,3 +13,5 @@ feats = np.load(
 
 print("feats.npy", feats[0])
 print("feats.npy", len(feats[0]))
+
+#Deepak's code end
