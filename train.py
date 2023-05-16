@@ -199,6 +199,7 @@ def main(unused_argv):
     t = time.time()
 
     if FLAGS.bsize > 1: # multi cluster per epoch
+    #Deepak's code start
       _, parts = partition_utils.partition_graph(train_adj, visible_data,
                                                 FLAGS.num_clusters)
       parts = [np.array(pt) for pt in parts]
@@ -209,6 +210,7 @@ def main(unused_argv):
                                               FLAGS.num_clusters,
                                               FLAGS.diag_lambda)
     idx_parts = list(range(len(parts))) # 0~50
+    #Deepak's code end
 
     np.random.shuffle(idx_parts)
     if FLAGS.bsize > 1:
